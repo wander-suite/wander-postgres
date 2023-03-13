@@ -10,10 +10,11 @@
     "paths": {
       "*": ["./src/*"]
     },
-
+    "typeRoots": ["./types"],
     "esModuleInterop": true,
     "outDir": "./dist"
   },
   "include": ["src", "**/*.ts"],
-  "exclude": [".vscode", "node_modules", "dist"]
+  "exclude": [".vscode", "node_modules", "dist"],
+  "types": ["./types/*"]
 }
