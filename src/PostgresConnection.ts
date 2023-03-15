@@ -1,6 +1,17 @@
-import { Pool } from "pg";
+import { Pool, QueryResult, type PoolClient } from "pg";
 import { PoolConfig } from "../types/PostgresConnection.types";
-import { Queries } from "../types/main.types";
+import { Queries, Params } from "../types/main.types";
+
+interface IPostgresConnection {
+  pool: Pool;
+  queries: Queries;
+  query(
+    query: string,
+    params: any[],
+    callback?: (err?: Error, result?: QueryResult<any>) => void
+  ): Promise<void>;
+  close(): Promise<void>;
+}
 
 export default class PostgresConnection {
   pool: Pool;
@@ -11,8 +22,8 @@ export default class PostgresConnection {
     this.queries = queries;
   }
 
-  static async build(config: PoolConfig) {
-    let client;
+  static async build(config: PoolConfig): Promise<PostgresConnection> {
+    let client: PoolClient;
     try {
       const pool = new Pool(config);
       client = await pool.connect();
@@ -23,12 +34,20 @@ export default class PostgresConnection {
     }
   }
 
-  async query(sqlQuery: string, params: any, callback: any) {
-    const client = await this.pool.connect();
-    return client.query(sqlQuery, params, callback);
+  async query(
+    sqlQuery: string,
+    params: any[],
+    callback?: (err?: Error, result?: QueryResult<any>) => void
+  ) {
+    try {
+      const client = await this.pool.connect();
+      return client.query(sqlQuery, params, callback);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
-  async close() {
+  async close(): Promise<void> {
     await this.pool.end();
   }
 }
