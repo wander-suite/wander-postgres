@@ -34,16 +34,9 @@ export default class PostgresClient<T, U> {
   }
 
   async createUser(params: Params) {
-    const { firstName, lastName, email, password } = params;
-    const mappedParams = {
-      firstName,
-      lastName,
-      email,
-      password,
-    };
     const response = await this.connection.query(
       this.queries["create-user"],
-      mappedParams
+      params
     );
 
     if (!response.ok) {
