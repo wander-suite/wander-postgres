@@ -6,8 +6,10 @@ export type Query = {
   (arg: Params): string;
 };
 
-export interface Queries {
-  (): {
-    [key: string]: Query;
-  };
+export interface PostgresQueriesMap {
+  [key: string]: (arg: Params) => string;
+}
+
+export interface PostgresQueries {
+  (): PostgresQueriesMap;
 }

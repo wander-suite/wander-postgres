@@ -1,50 +1,118 @@
-import { Pool, QueryResult, type PoolClient } from "pg";
+import { Pool, type PoolClient } from "pg";
 import { PoolConfig } from "../types/PostgresConnection.types";
-import { Queries, Params } from "../types/main.types";
+import { Params } from "../types/main.types";
 
-interface IPostgresConnection {
+type Result<Data = unknown> =
+  | { ok: true; value: Data }
+  | { ok: false; error: Error };
+
+type Query<T, U> = (
+  queryGenerator: (params: Params) => string,
+  params: Params,
+  transform?: (values: T[]) => U
+) => Promise<Result<U>>;
+
+type GetQueryResult = (
+  client: PoolClient,
+  queryGenerator: (params: Params) => string,
+  params: Params
+) => Promise<Result<any[]>>;
+
+interface IPostgresConnection<T, U> {
   pool: Pool;
-  queries: Queries;
-  query(
-    query: string,
-    params: any[],
-    callback?: (err?: Error, result?: QueryResult<any>) => void
-  ): Promise<void>;
+  query: Query<T, U>;
+  getQueryResult: GetQueryResult;
   close(): Promise<void>;
 }
 
-export default class PostgresConnection {
+export default class PostgresConnection<T, U>
+  implements IPostgresConnection<T, U>
+{
   pool: Pool;
-  queries: Queries;
 
-  constructor(pool: Pool, queries: Queries) {
+  constructor(pool: Pool) {
     this.pool = pool;
-    this.queries = queries;
   }
 
-  static async build(config: PoolConfig): Promise<PostgresConnection> {
+  static async build<T, U>(
+    config: PoolConfig
+  ): Promise<PostgresConnection<T, U>> {
     let client: PoolClient;
     try {
       const pool = new Pool(config);
       client = await pool.connect();
-      return new PostgresConnection(pool, config.queries);
+      return new PostgresConnection(pool);
     } catch (error) {
       console.log(error);
       client.release();
     }
   }
 
-  async query(
-    sqlQuery: string,
-    params: any[],
-    callback?: (err?: Error, result?: QueryResult<any>) => void
+  async getQueryResult(
+    client: PoolClient,
+    queryGenerator: (params: Params) => string,
+    params: Params
   ) {
+    const query = queryGenerator(params);
+    let queryResult;
     try {
-      const client = await this.pool.connect();
-      return client.query(sqlQuery, params, callback);
+      queryResult = await client.query(query);
+      return {
+        ok: true,
+        value: queryResult.rows,
+      } as const;
+    } catch (err) {
+      return {
+        ok: false,
+        error: err,
+      } as const;
+    }
+  }
+
+  /**
+   * Method overloading. The function signatures are being evaluated from the
+   * bottom up. At the very bottom, there is a super-flexible, super-open method
+   * definition. Building on top of that, we're "clamping" it down to two
+   * possibilities - one that handles what happens when the transform callback
+   * is passed in, and one that handles when one isn't.
+   *
+   * If the transform callback isn't provided, we're guaranteed an array of T
+   * values, but if a transform callback is passed in, it's going of type U,
+   * which could be anything
+   */
+  async query(
+    queryGenerator: (params: Params) => string,
+    params: Params
+  ): Promise<Result<T[]>>;
+  async query(
+    queryGenerator: (params: Params) => string,
+    params: Params,
+    transform: (values: T[]) => U
+  ): Promise<Result<U>>;
+  async query(
+    queryGenerator: (params: Params) => string,
+    params: Params,
+    transform?: (values: T[]) => U
+  ): Promise<Result<T[] | U>> {
+    const client = await this.pool.connect();
+    let queryResult;
+    try {
+      queryResult = await this.getQueryResult(client, queryGenerator, params);
     } catch (err) {
       console.log(err);
+    } finally {
+      client.release();
     }
+
+    if (!queryResult.ok || transform == undefined) {
+      return queryResult;
+    }
+
+    const { value } = queryResult;
+    return {
+      ok: true,
+      value: transform(value),
+    } as const;
   }
 
   async close(): Promise<void> {
