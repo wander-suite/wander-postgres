@@ -1,20 +1,21 @@
 import { Pool, type PoolClient } from "pg";
 import { PoolConfig } from "../types/PostgresConnection.types";
 import { Params } from "../types/main.types";
+import { SQLStatement } from "sql-template-strings";
 
 type Result<Data = unknown> =
   | { ok: true; value: Data }
   | { ok: false; error: Error };
 
 type Query<T, U> = (
-  queryGenerator: (params: Params) => string,
+  queryGenerator: (params: Params) => SQLStatement,
   params: Params,
   transform?: (values: T[]) => U
 ) => Promise<Result<U>>;
 
 type GetQueryResult = (
   client: PoolClient,
-  queryGenerator: (params: Params) => string,
+  queryGenerator: (params: Params) => SQLStatement,
   params: Params
 ) => Promise<Result<any[]>>;
 
@@ -50,7 +51,7 @@ export default class PostgresConnection<T, U>
 
   async getQueryResult(
     client: PoolClient,
-    queryGenerator: (params: Params) => string,
+    queryGenerator: (params: Params) => SQLStatement,
     params: Params
   ) {
     const query = queryGenerator(params);
@@ -81,16 +82,16 @@ export default class PostgresConnection<T, U>
    * which could be anything
    */
   async query(
-    queryGenerator: (params: Params) => string,
+    queryGenerator: (params: Params) => SQLStatement,
     params: Params
   ): Promise<Result<T[]>>;
   async query(
-    queryGenerator: (params: Params) => string,
+    queryGenerator: (params: Params) => SQLStatement,
     params: Params,
     transform: (values: T[]) => U
   ): Promise<Result<U>>;
   async query(
-    queryGenerator: (params: Params) => string,
+    queryGenerator: (params: Params) => SQLStatement,
     params: Params,
     transform?: (values: T[]) => U
   ): Promise<Result<T[] | U>> {
