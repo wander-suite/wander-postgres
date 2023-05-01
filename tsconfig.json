@@ -1,7 +1,8 @@
 {
   "compilerOptions": {
-    "target": "ES2016",
-    "module": "commonjs",
+    "target": "es2020",
+    "module": "ES2022",
+    "types": ["node", "jest"],
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
@@ -14,7 +15,5 @@
     "esModuleInterop": true,
     "outDir": "./dist"
   },
-  "include": ["src", "**/*.ts"],
-  "exclude": [".vscode", "node_modules", "dist"],
-  "types": ["./types/*"]
+  "include": ["src"]
 }

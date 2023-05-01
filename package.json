@@ -4,7 +4,7 @@
   "description": "A generalized postgres instance which enables db querying for Wander",
   "main": "src/index.ts",
   "scripts": {
-    "test": "docker-compose up -d && sleep 5 && jest --runInBand --verbose; docker compose down",
+    "test": "docker-compose up -d && sleep 5 && jest --watch --runInBand --verbose; docker compose down",
     "lint": "eslint --ext .js,.ts ."
   },
   "repository": {
@@ -18,16 +18,19 @@
   },
   "homepage": "https://github.com/wander-suite/wander-postgres#readme",
   "dependencies": {
-    "dotenv": "^16.0.3",
+    "@jest/globals": "^29.5.0",
     "pg": "^8.10.0",
     "sql-template-strings": "^2.2.2",
     "typescript": "^4.9.5"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.20.2",
-    "@types/jest": "^29.4.0",
+    "@babel/preset-typescript": "^7.21.5",
+    "@types/jest": "^29.5.1",
+    "@types/node": "^18.16.3",
     "@types/pg": "^8.6.6",
     "babel-jest": "^29.5.0",
+    "dotenv": "^16.0.3",
     "eslint": "^8.33.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-airbnb-typescript": "^17.0.0",
@@ -38,5 +41,29 @@
     "ts-jest": "^29.0.5",
     "ts-node": "^10.9.1"
   },
-  "type": "module"
+  "type": "module",
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "tsconfig": "__tests__/jest.tsconfig.json"
+      }
+    },
+    "setupFiles": [
+      "./config/envModules.ts"
+    ],
+    "testEnvironment": "node"
+  },
+  "babel": {
+    "presets": [
+      [
+        "@babel/preset-env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ],
+      "@babel/preset-typescript"
+    ]
+  }
 }

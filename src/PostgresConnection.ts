@@ -3,9 +3,7 @@ import { PoolConfig } from "../types/PostgresConnection.types";
 import { Params } from "../types/main.types";
 import { SQLStatement } from "sql-template-strings";
 
-type Result<Data = unknown> =
-  | { ok: true; value: Data }
-  | { ok: false; error: Error };
+type Result<Data = unknown> = Data | Error;
 
 type Query<T, U> = (
   queryGenerator: (params: Params) => SQLStatement,
@@ -17,7 +15,7 @@ type GetQueryResult = (
   client: PoolClient,
   queryGenerator: (params: Params) => SQLStatement,
   params: Params
-) => Promise<Result<any[]>>;
+) => Promise<Result<any[] | Error>>;
 
 interface IPostgresConnection<T, U> {
   pool: Pool;
@@ -40,6 +38,7 @@ export default class PostgresConnection<T, U>
   ): Promise<PostgresConnection<T, U>> {
     let client: PoolClient;
     try {
+      console.log(config);
       const pool = new Pool(config);
       client = await pool.connect();
       return new PostgresConnection(pool);
@@ -58,15 +57,12 @@ export default class PostgresConnection<T, U>
     let queryResult;
     try {
       queryResult = await client.query(query);
-      return {
-        ok: true,
-        value: queryResult.rows,
-      } as const;
+      if (!(queryResult instanceof Error)) {
+        return queryResult.rows;
+      }
     } catch (err) {
-      return {
-        ok: false,
-        error: err,
-      } as const;
+      console.log(err);
+      return err;
     }
   }
 
@@ -105,15 +101,11 @@ export default class PostgresConnection<T, U>
       client.release();
     }
 
-    if (!queryResult.ok || transform == undefined) {
+    if (queryResult instanceof Error || transform == undefined) {
       return queryResult;
     }
 
-    const { value } = queryResult;
-    return {
-      ok: true,
-      value: transform(value),
-    } as const;
+    return transform(queryResult);
   }
 
   async close(): Promise<void> {

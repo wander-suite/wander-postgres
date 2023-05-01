@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import { PoolConfig } from "../types/PostgresConnection.types";
-import { queries } from "queries";
+import { queries } from "../src/queries";
 
 dotenv.config;
 
@@ -12,7 +12,7 @@ const postgresConfig: PoolConfig = {
   database: DBNAME,
   password: DBPASS,
   port: 5432,
-  connectionString: URI,
+  // connectionString: URI,
   max: 2,
   idleTimeoutMillis: 120000,
   connectionTimeoutMillis: 12000,
@@ -21,5 +21,7 @@ const postgresConfig: PoolConfig = {
 
 const config = {
   environment: ENV,
-  ...postgresConfig,
+  postgresConfig,
 };
+
+export default config;

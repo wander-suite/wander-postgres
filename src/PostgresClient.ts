@@ -1,14 +1,18 @@
-import PostgresConnection from "PostgresConnection";
-import { queries as psqueries } from "queries";
+import PostgresConnection from "./PostgresConnection";
+import { queries as psqueries } from "./queries";
 import { Params, PostgresQueriesMap } from "../types/main.types";
 import { PoolConfig } from "../types/PostgresConnection.types";
 
-interface NewUserParams {
+export interface NewUserParams extends Params {
   firstName: string;
   lastName: string;
   email: string;
   password: string;
 }
+
+export type UserId = {
+  id: number;
+};
 
 export default class PostgresClient<T, U> {
   connection: PostgresConnection<T, U>;
@@ -33,14 +37,11 @@ export default class PostgresClient<T, U> {
     return this.connection.close();
   }
 
-  async createUser(params: Params) {
-    const response = await this.connection.query(
-      this.queries["create-user"],
-      params
-    );
+  async createUser(params: NewUserParams) {
+    return await this.connection.query(this.queries["create-user"], params);
+  }
 
-    if (!response.ok) {
-      return response;
-    }
+  async deleteUser(params: UserId) {
+    return await this.connection.query(this.queries["delete-user"], params);
   }
 }
