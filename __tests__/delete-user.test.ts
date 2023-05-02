@@ -20,9 +20,9 @@ beforeEach(async () => {
   id = result[0].id;
 });
 
-// afterAll(async () => {
-//   await client.close();
-// });
+afterAll(async () => {
+  await client.close();
+});
 
 describe("delete-user tests", () => {
   it("should delete a user when given its id", async () => {

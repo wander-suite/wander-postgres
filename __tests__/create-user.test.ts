@@ -19,9 +19,9 @@ afterEach(async () => {
   await client.deleteUser(id);
 });
 
-// afterAll(async () => {
-//   await client.close();
-// });
+afterAll(async () => {
+  await client.close();
+});
 
 describe("create-user tests", () => {
   it.skip("should throw an error if creation of the user is unsuccessful", async () => {

@@ -43,7 +43,9 @@ export default class PostgresConnection<T, U>
       return new PostgresConnection(pool);
     } catch (error) {
       console.log(error);
-      client.release();
+      throw new Error(error?.message);
+    } finally {
+      if (client) client.release();
     }
   }
 

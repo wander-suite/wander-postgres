@@ -8,6 +8,10 @@ beforeAll(async () => {
   pool = await PostgresConnection.build(config.postgresConfig);
 });
 
+afterAll(async () => {
+  await pool.close();
+});
+
 describe("PostgresConnection tests", () => {
   it("should return 1 as answer", async () => {
     const query = () => {
