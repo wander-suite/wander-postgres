@@ -2,6 +2,10 @@ version: "3.0"
 
 services:
   db:
-    image: wandersuite/wander:dbv0.0.03
+    image: wandersuite/wander:${TAG_VERSION}
+    environment:
+      - POSTGRES_DB=${DBNAME}
+      - POSTGRES_PASSWORD=${DBPASS}
+      - POSTGRES_USER=${DBUSER}
     ports:
       - "5432:5432"

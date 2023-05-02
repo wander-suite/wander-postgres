@@ -1,7 +1,7 @@
 import { SQLStatement } from "sql-template-strings";
 
 export interface Params {
-  [key: string]: string | number;
+  [key: string]: any;
 }
 
 export type Query = {
@@ -9,7 +9,7 @@ export type Query = {
 };
 
 export interface PostgresQueriesMap {
-  [key: string]: (arg: Params) => SQLStatement;
+  [key: string]: (arg: Params | string) => SQLStatement;
 }
 
 export interface PostgresQueries {

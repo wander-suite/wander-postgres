@@ -6,15 +6,15 @@ import { SQLStatement } from "sql-template-strings";
 type Result<Data = unknown> = Data | Error;
 
 type Query<T, U> = (
-  queryGenerator: (params: Params) => SQLStatement,
-  params: Params,
+  queryGenerator: (params: Params | string) => SQLStatement,
+  params: Params | string,
   transform?: (values: T[]) => U
 ) => Promise<Result<U>>;
 
 type GetQueryResult = (
   client: PoolClient,
-  queryGenerator: (params: Params) => SQLStatement,
-  params: Params
+  queryGenerator: (params: Params | string) => SQLStatement,
+  params: Params | string
 ) => Promise<Result<any[] | Error>>;
 
 interface IPostgresConnection<T, U> {
@@ -38,7 +38,6 @@ export default class PostgresConnection<T, U>
   ): Promise<PostgresConnection<T, U>> {
     let client: PoolClient;
     try {
-      console.log(config);
       const pool = new Pool(config);
       client = await pool.connect();
       return new PostgresConnection(pool);
@@ -50,8 +49,8 @@ export default class PostgresConnection<T, U>
 
   async getQueryResult(
     client: PoolClient,
-    queryGenerator: (params: Params) => SQLStatement,
-    params: Params
+    queryGenerator: (params: Params | string) => SQLStatement,
+    params: Params | string
   ) {
     const query = queryGenerator(params);
     let queryResult;
@@ -78,17 +77,17 @@ export default class PostgresConnection<T, U>
    * which could be anything
    */
   async query(
-    queryGenerator: (params: Params) => SQLStatement,
-    params: Params
+    queryGenerator: (params: Params | string) => SQLStatement,
+    params: Params | string
   ): Promise<Result<T[]>>;
   async query(
-    queryGenerator: (params: Params) => SQLStatement,
-    params: Params,
+    queryGenerator: (params: Params | string) => SQLStatement,
+    params: Params | string,
     transform: (values: T[]) => U
   ): Promise<Result<U>>;
   async query(
-    queryGenerator: (params: Params) => SQLStatement,
-    params: Params,
+    queryGenerator: (params: Params | string) => SQLStatement,
+    params: Params | string,
     transform?: (values: T[]) => U
   ): Promise<Result<T[] | U>> {
     const client = await this.pool.connect();

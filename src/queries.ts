@@ -1,13 +1,23 @@
+import { UserId } from "PostgresClient";
 import { Params } from "../types/main.types";
 import { SQL } from "sql-template-strings";
 
 export const queries = () => {
   return {
-    "create-user": (params: Params) => {
-      return SQL`INSERT INTO USER u ("firstName", "lastName", "email", "password") VALUES (${params.firstName}, ${params.lastName}, ${params.email}, ${params.password}) RETURNING "id", "firstName", "lastName", "email"`;
+    "fetch-user": (filters: string) => {
+      const base = SQL`SELECT id, first_name as "firstName", last_name as "lastName", email FROM users`;
+      if (filters) {
+        base.append(filters);
+      }
+
+      return base;
     },
-    "delete-user": (params: Params) => {
-      return SQL`DELETE FROM USER u WHERE id = ${params.id}`;
+
+    "create-user": (params: Params) => {
+      return SQL`INSERT INTO users ("first_name", "last_name", "email", "password") VALUES (${params.firstName}, ${params.lastName}, ${params.email}, ${params.password}) RETURNING id, first_name as "firstName", last_name as "lastName", email`;
+    },
+    "delete-user": (id: UserId) => {
+      return SQL`DELETE FROM users WHERE "id" = ${id} RETURNING id`;
     },
   };
 };

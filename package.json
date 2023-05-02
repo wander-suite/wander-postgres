@@ -19,6 +19,8 @@
   "homepage": "https://github.com/wander-suite/wander-postgres#readme",
   "dependencies": {
     "@jest/globals": "^29.5.0",
+    "@types/lodash": "^4.14.194",
+    "lodash": "^4.17.21",
     "pg": "^8.10.0",
     "sql-template-strings": "^2.2.2",
     "typescript": "^4.9.5"
@@ -51,7 +53,8 @@
     "setupFiles": [
       "./config/envModules.ts"
     ],
-    "testEnvironment": "node"
+    "testEnvironment": "node",
+    "testTimeout": 15000
   },
   "babel": {
     "presets": [

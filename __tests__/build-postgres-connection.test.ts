@@ -3,14 +3,9 @@ import PostgresConnection from "../src/PostgresConnection";
 import config from "../config/config";
 import SQL from "sql-template-strings";
 
-let pool, client;
+let pool;
 beforeAll(async () => {
   pool = await PostgresConnection.build(config.postgresConfig);
-  client = await PostgresClient.build(config.postgresConfig);
-});
-
-afterAll(async () => {
-  await client.close();
 });
 
 describe("PostgresConnection tests", () => {
@@ -20,10 +15,8 @@ describe("PostgresConnection tests", () => {
     };
 
     const params = {};
-    const transform = false;
 
-    const result = await pool.query(query, params, transform);
-
-    expect(result.answer).toBe(1);
+    const result = await pool.query(query, params);
+    expect(result[0].answer).toBe(1);
   });
 });

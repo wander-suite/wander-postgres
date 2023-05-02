@@ -2,8 +2,13 @@ import PostgresConnection from "./PostgresConnection";
 import { queries as psqueries } from "./queries";
 import { Params, PostgresQueriesMap } from "../types/main.types";
 import { PoolConfig } from "../types/PostgresConnection.types";
+import { filterParams } from "../utils/filterParams";
 
-export interface NewUserParams extends Params {
+export interface Filters {
+  [k: string]: Array<number | string | boolean>;
+}
+
+export interface UserParams extends Params {
   firstName: string;
   lastName: string;
   email: string;
@@ -34,14 +39,22 @@ export default class PostgresClient<T, U> {
   }
 
   async close() {
-    return this.connection.close();
+    await this.connection.close();
   }
 
-  async createUser(params: NewUserParams) {
+  async fetchUser(params: Params) {
+    const filterString = filterParams(params);
+
+    return await this.connection.query(
+      this.queries["fetch-user"],
+      filterString
+    );
+  }
+  async createUser(params: UserParams) {
     return await this.connection.query(this.queries["create-user"], params);
   }
 
-  async deleteUser(params: UserId) {
-    return await this.connection.query(this.queries["delete-user"], params);
+  async deleteUser(id: UserId) {
+    return await this.connection.query(this.queries["delete-user"], id);
   }
 }
