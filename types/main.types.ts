@@ -1,8 +1,15 @@
 import { SQLStatement } from "sql-template-strings";
 
-export interface Params {
-  [key: string]: any;
-}
+export type Params =
+  | {
+      [key: string]: string | number;
+    }
+  | string
+  | number;
+
+export type ParamsObject = {
+  [key: string]: string | number;
+};
 
 export type Query = {
   (arg: Params): typeof SQLStatement;

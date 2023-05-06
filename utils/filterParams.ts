@@ -1,7 +1,7 @@
 import { snakeCase } from "lodash";
-import { Params } from "../types/main.types";
+import { UserFilters } from "../types/client.types";
 
-export const filterParams = (params: Params): string => {
+export const filterParams = (params: UserFilters): string => {
   const base = ` WHERE `;
 
   const filterQuery = Object.entries(params).map(([key, value]) => {
