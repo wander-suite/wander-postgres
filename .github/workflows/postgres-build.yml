@@ -1,20 +1,6 @@
 name: Build Postgres Service
 
 on:
-  workflow_call:
-    secrets:
-      DBNAME:
-        description: "DB Name"
-        required: true
-      DBUSER:
-        description: "DB user"
-        required: true
-      DBPASS:
-        description: "DB pass"
-        required: true
-      TAG_VERSION:
-        description: "DB tag"
-        required: true
   workflow_dispatch:
   pull_request:
     branches:
