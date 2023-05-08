@@ -25,6 +25,8 @@ jobs:
         node-version: [16.x, 18.x]
     env:
       COMPOSE_FILE: docker-compose-ci.yml
+      DOCKER_USER: ${{ secrets.DOCKER_USER}}
+      DOCKER_PASS: ${{ secrets.DOCKER_PASS}}
       DBNAME: ${{ secrets.DBNAME }}
       DBUSER: ${{ secrets.DBUSER }}
       DBPASS: ${{ secrets.DBPASS }}
@@ -33,6 +35,9 @@ jobs:
     steps:
       - name: Checkout repository to Github Workspace
         uses: actions/checkout@v3
+
+      - name: Login to Dockerhub
+        run: docker login -u $DOCKER_USER -p $DOCKER_PASS
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
