@@ -4,7 +4,7 @@
   "description": "A generalized postgres instance which enables db querying for Wander",
   "main": "src/index.ts",
   "scripts": {
-    "ci-test": "docker-compose -f docker-compose-ci.yml up -d && sleep 5 && jest --watch --runInBand --verbose; docker-compose down",
+    "ci-test": "docker-compose -f docker-compose-ci.yml up -d && sleep 5 && jest --runInBand --verbose; docker-compose down",
     "test": "docker-compose up -d && sleep 5 && jest --watch --runInBand --verbose; docker compose down",
     "lint": "eslint --ext .js,.ts ."
   },
