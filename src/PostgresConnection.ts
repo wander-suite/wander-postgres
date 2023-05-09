@@ -15,7 +15,7 @@ type GetQueryResult = (
   client: PoolClient,
   queryGenerator: (params: Params | string) => SQLStatement,
   params: Params | string
-) => Promise<Result<(string | number)[] | Error>>;
+) => Promise<Result<any[] | Error>>;
 
 interface IPostgresConnection<T, U> {
   pool: Pool;
