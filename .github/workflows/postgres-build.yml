@@ -27,6 +27,7 @@ jobs:
         node-version: [16.x, 18.x]
     env:
       COMPOSE_FILE: docker-compose-ci.yml
+      HOST: ${{secrets.HOST}}
       DBNAME: ${{ secrets.DBNAME }}
       DBUSER: ${{ secrets.DBUSER }}
       DBPASS: ${{ secrets.DBPASS }}
