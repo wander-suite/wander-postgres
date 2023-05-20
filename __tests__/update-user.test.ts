@@ -23,18 +23,21 @@ afterAll(async () => {
   await client.close();
 });
 
-describe("create-user tests", () => {
-  it.skip("should throw an error if creation of the user is unsuccessful", async () => {
-    expect(await client.createUser()).toThrowError();
-  });
+describe("update-user tests", () => {
+  it("should return the updated user", async () => {
+    const createdUser: Array<CreatedUserResult> = await client.createUser(
+      TEST_USER
+    );
+    id = createdUser[0].id;
 
-  it("should create a user and return the user along with its id", async () => {
-    const result: Array<CreatedUserResult> = await client.createUser(TEST_USER);
-    id = result[0].id;
+    const result: Array<CreatedUserResult> = await client.updateUser({
+      id,
+      firstName: "test-2",
+    });
 
     const expectedResult: CreatedUserResult = {
       id,
-      firstName: "test",
+      firstName: "test-2",
       lastName: "test",
       email: "test@testing.com",
     };

@@ -37,6 +37,10 @@ export default class PostgresClient<T, U> {
     return await this.connection.query(this.queries["create-user"], user);
   }
 
+  async updateUser(params: Partial<UserParams & { id: number }>) {
+    return await this.connection.query(this.queries["update-user"], params);
+  }
+
   async deleteUser(id: UserId) {
     return await this.connection.query(this.queries["delete-user"], id);
   }

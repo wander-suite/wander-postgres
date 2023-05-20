@@ -9,7 +9,7 @@ type Query<T, U> = (
   queryGenerator: (params: Params | string) => SQLStatement,
   params: Params | string,
   transform?: (values: T[]) => U
-) => Promise<Result<U>>;
+) => Promise<Result<U | Error>>;
 
 type GetQueryResult = (
   client: PoolClient,
@@ -64,6 +64,11 @@ export default class PostgresConnection<T, U>
     } catch (err) {
       console.log(err);
       return err;
+      // if (err instanceof Error) {
+      //   throw new Error(err?.message);
+      // } else if (err instanceof TypeError) {
+      //   throw new Error(err?.message);
+      // }
     }
   }
 
@@ -98,6 +103,7 @@ export default class PostgresConnection<T, U>
       queryResult = await this.getQueryResult(client, queryGenerator, params);
     } catch (err) {
       console.log(err);
+      throw err;
     } finally {
       client.release();
     }
