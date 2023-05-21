@@ -64,11 +64,6 @@ export default class PostgresConnection<T, U>
     } catch (err) {
       console.log(err);
       return err;
-      // if (err instanceof Error) {
-      //   throw new Error(err?.message);
-      // } else if (err instanceof TypeError) {
-      //   throw new Error(err?.message);
-      // }
     }
   }
 
