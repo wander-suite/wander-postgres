@@ -56,8 +56,7 @@ jobs:
         run: |
           npm i
           npm run ci-test
-        env:
-          HOST: ${{secrets.HOST}}
+        continue-on-error: false
 
   code-scan:
     name: CodeQL Analysis
