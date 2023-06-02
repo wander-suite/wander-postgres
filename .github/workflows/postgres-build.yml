@@ -66,13 +66,13 @@ jobs:
       - name: Generating .env file
         shell: bash
         run: |
-          touch config/.env
-          echo DBNAME="$DBNAME" >> config/.env
-          echo DBUSER="$DBUSER" >> config/.env
-          echo DBPASS="$DBPASS" >> config/.env
+          touch .env
+          echo DBNAME="$DBNAME" >> .env
+          echo DBUSER="$DBUSER" >> .env
+          echo DBPASS="$DBPASS" >> .env
           pwd
           ls -al
-          cat config/.env
+          cat .env
 
       - name: Run Tests
         shell: bash
