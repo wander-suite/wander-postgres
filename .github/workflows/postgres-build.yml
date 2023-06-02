@@ -53,9 +53,9 @@ jobs:
         shell: bash
         run: docker-compose -f docker-compose-ci.yml run -d --name postgres_db db
       
-      - name: Debug container
+      - name: Manual connection to DB
         shell: bash
-        run: docker ps -a && docker logs postgres_db
+        run: docker ps -a && docker logs postgres_db && docker exec -it postgres_db psql -c '\dt' -d ${{ secrets.DBNAME }} -U ${{ secrets.DBUSER }} -W ${{ secrets.DBPASS }} 
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
