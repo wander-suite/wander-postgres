@@ -5,10 +5,6 @@ import SQL from "sql-template-strings";
 
 let pool;
 beforeAll(async () => {
-  console.log("PLEASE WORK??????")
-  console.log(process.env.DBUSER)
-  console.log(config.postgresConfig.user)
-  console.log(config.postgresConfig.database)
   pool = await PostgresConnection.build(config.postgresConfig);
 });
 
