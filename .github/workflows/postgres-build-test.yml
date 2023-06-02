@@ -53,7 +53,7 @@ jobs:
     steps:
       - name: Checkout repository to Github Workspace
         uses: actions/checkout@v3
-        
+
       - name: Generating .env file
         shell: bash
         run: |
@@ -61,7 +61,7 @@ jobs:
           echo DBNAME="$DBNAME" >> .env
           echo DBUSER="$DBUSER" >> .env
           echo DBPASS="$DBPASS" >> .env
-          echo HOST="localhost" >> .env
+          echo HOST="postgres" >> .env
           ls -al
           cat .env
 
