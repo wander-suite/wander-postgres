@@ -63,10 +63,10 @@ jobs:
     runs-on: ubuntu-latest
     container: ubuntu
     strategy:
-    matrix:
-      os: [ubuntu-latest]
-      node-version: [16.x, 18.x]
-      
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [16.x, 18.x]
+
     env:
       COMPOSE_FILE: docker-compose-ci.yml
       DBNAME: ${{ secrets.DBNAME }}
