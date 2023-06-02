@@ -45,8 +45,11 @@ jobs:
           DOCKER_USER: ${{ secrets.DOCKER_USER}}
           DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN}}
       
-      - name: Build docker images
-        run: docker-compose -f docker-compose-ci.yml up -d
+      - name: Pull database image from dockerhub
+        run: docker-compose -f docker-compose-ci.yml pull db
+      
+      - name: Run DB container using database image
+        run: docker-compose -f docker-compose-ci.yml run -d --name postgres_db db
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
