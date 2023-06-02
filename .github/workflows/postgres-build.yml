@@ -50,6 +50,9 @@ jobs:
       
       - name: Run DB container using database image
         run: docker-compose -f docker-compose-ci.yml run -d --name postgres_db db
+      
+      - name: debug
+        run: docker ps -a
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
