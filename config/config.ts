@@ -7,7 +7,7 @@ dotenv.config;
 const { DBNAME, DBPASS, DBUSER, ENV, HOST, URI } = process.env;
 
 const postgresConfig: PoolConfig = {
-  host: HOST || "localhost",
+  host: HOST || "127.0.0.1",
   user: DBUSER,
   database: DBNAME,
   password: DBPASS,
