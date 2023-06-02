@@ -19,7 +19,7 @@ permissions:
   security-events: write
 
 jobs:
-  test:
+  containers:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -58,7 +58,18 @@ jobs:
         run: |
           docker ps -a
           docker logs postgres_db
-          ss -tulpn
+
+    tests:
+    runs-on: ubuntu-latest
+    container: ubuntu
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        node-version: [16.x, 18.x]
+      
+      - name: "Verify active services"
+        shell: bash
+        run: ss -tulpn
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
