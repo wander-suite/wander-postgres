@@ -62,10 +62,7 @@ jobs:
   test:
     needs: containers
     runs-on: ubuntu-latest
-    container:
-      image: node
-      volumes:
-        - .:/
+    container: node
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -86,6 +83,7 @@ jobs:
           echo DBUSER="$DBUSER" >> .env
           echo DBPASS="$DBPASS" >> .env
           echo HOST="localhost" >> .env
+          pwd
           ls -al
           cat .env
 
