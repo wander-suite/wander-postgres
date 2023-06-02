@@ -43,7 +43,6 @@ export default class PostgresConnection<T, U>
       return new PostgresConnection(pool);
     } catch (error) {
       console.log(error);
-      console.log(process.env.HOST)
       throw new Error(error?.message);
     } finally {
       if (client) client.release();
