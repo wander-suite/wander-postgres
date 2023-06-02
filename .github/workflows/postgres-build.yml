@@ -56,6 +56,10 @@ jobs:
         run: |
           npm i
           npm run ci-test
+        env:
+          DBNAME: ${{ secrets.DBNAME }}
+          DBUSER: ${{ secrets.DBUSER }}
+          DBPASS: ${{ secrets.DBPASS }}
         continue-on-error: false
 
   code-scan:
