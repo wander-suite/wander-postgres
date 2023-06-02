@@ -62,7 +62,10 @@ jobs:
   test:
     needs: containers
     runs-on: ubuntu-latest
-    container: node
+    container:
+      image: node
+      volumes:
+        - ${{ github.workspace }}:${{ github.workspace }}
     strategy:
       matrix:
         os: [ubuntu-latest]
