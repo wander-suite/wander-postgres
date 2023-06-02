@@ -53,9 +53,9 @@ jobs:
         shell: bash
         run: docker-compose -f docker-compose-ci.yml run -d --name postgres_db db
       
-      - name: debug
+      - name: Debug container
         shell: bash
-        run: docker ps -a && docker inspect postgres_db && docker logs postgres_db
+        run: docker ps -a && docker logs postgres_db
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -70,7 +70,6 @@ jobs:
           echo DBNAME="$DBNAME" >> .env
           echo DBUSER="$DBUSER" >> .env
           echo DBPASS="$DBPASS" >> .env
-          pwd
           ls -al
           cat .env
 

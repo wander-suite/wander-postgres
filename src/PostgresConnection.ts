@@ -1,5 +1,4 @@
 import { Pool, type PoolClient } from "pg";
-import "dotenv/config";
 import { PoolConfig } from "../types/PostgresConnection.types";
 import { Params } from "../types/main.types";
 import { SQLStatement } from "sql-template-strings";
@@ -43,9 +42,6 @@ export default class PostgresConnection<T, U>
       client = await pool.connect();
       return new PostgresConnection(pool);
     } catch (error) {
-      console.log("PLEASE WORK??????")
-      console.log(process.env.DBUSER)
-      console.log(process.env.DBNAME)
       console.log(error);
       throw new Error(error?.message);
     } finally {
