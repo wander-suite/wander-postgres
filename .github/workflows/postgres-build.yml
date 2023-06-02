@@ -21,10 +21,29 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+
+    container: 
+      image: node
+    
     strategy:
       matrix:
         os: [ubuntu-latest]
         node-version: [16.x, 18.x]
+    
+    services:
+      postgres:
+        image: wandersuite/db:test
+        credentials:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+        env:
+          POSTGRES_DB: ${{ secrets.DBNAME }}
+          POSTGRES_USER: ${{ secrets.DBUSER }}
+          POSTGRES_PASSWORD: ${{ secrets.DBPASS }}
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
     env:
       COMPOSE_FILE: docker-compose-ci.yml
       DBNAME: ${{ secrets.DBNAME }}
@@ -36,36 +55,6 @@ jobs:
       - name: Checkout repository to Github Workspace
         uses: actions/checkout@v3
 
-      - name: Login to Dockerhub
-        uses: docker/login-action@v2.1.0
-        with:
-          username: ${{ secrets.DOCKER_USER }}
-          password: ${{ secrets.DOCKER_TOKEN }}
-        env:
-          DOCKER_USER: ${{ secrets.DOCKER_USER}}
-          DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN}}
-      
-      - name: Pull database image from dockerhub
-        shell: bash
-        run: docker-compose -f docker-compose-ci.yml pull db
-      
-      - name: Running DB container using pulled image
-        shell: bash
-        run: docker-compose -f docker-compose-ci.yml run -d --name postgres_db db
-      
-      - name: Debug container & service is running
-        shell: bash
-        run: |
-          docker ps -a
-          docker logs postgres_db
-          ss -tulpn
-
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: "npm"
-
       - name: Generating .env file
         shell: bash
         run: |
@@ -73,7 +62,7 @@ jobs:
           echo DBNAME="$DBNAME" >> .env
           echo DBUSER="$DBUSER" >> .env
           echo DBPASS="$DBPASS" >> .env
-          echo HOST="localhost" >> .env
+          echo HOST="postgres" >> .env
           ls -al
           cat .env
 
