@@ -65,7 +65,7 @@ jobs:
     container:
       image: node
       volumes:
-        - .:${{ github.workspace }}
+        - ${{ github.workspace }}:${{ github.workspace }}
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -87,6 +87,7 @@ jobs:
           echo DBPASS="$DBPASS" >> .env
           echo HOST="localhost" >> .env
           pwd
+          ls -al ${{ github.workspace }}
           ls -al
           cat .env
 
