@@ -58,10 +58,6 @@ jobs:
         run: |
           docker ps -a
           docker logs postgres_db
-      
-      - name: Manual connection to DB
-        shell: bash
-        run: docker exec postgres_db psql -d${{ secrets.DBNAME }} -U${{ secrets.DBUSER }} -W${{ secrets.DBPASS }} -c'\dt' 
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -76,6 +72,7 @@ jobs:
           echo DBNAME="$DBNAME" >> .env
           echo DBUSER="$DBUSER" >> .env
           echo DBPASS="$DBPASS" >> .env
+          echo HOST="localhost" >> .env
           ls -al
           cat .env
 
