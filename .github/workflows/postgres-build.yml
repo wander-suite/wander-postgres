@@ -62,7 +62,7 @@ jobs:
   test:
     needs: containers
     runs-on: ubuntu-latest
-    container: ubuntu
+    container: node
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -75,12 +75,6 @@ jobs:
       TAG_VERSION: ${{ secrets.TAG_VERSION}}
 
     steps:
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: "npm"
-
       - name: Generating .env file
         shell: bash
         run: |
