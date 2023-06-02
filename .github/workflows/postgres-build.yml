@@ -58,25 +58,13 @@ jobs:
         run: |
           docker ps -a
           docker logs postgres_db
+          ss -tulpn
 
-  test:
-    needs: containers
-    runs-on: ubuntu-latest
-    container: node
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        node-version: [16.x, 18.x]
-    env:
-      COMPOSE_FILE: docker-compose-ci.yml
-      DBNAME: ${{ secrets.DBNAME }}
-      DBUSER: ${{ secrets.DBUSER }}
-      DBPASS: ${{ secrets.DBPASS }}
-      TAG_VERSION: ${{ secrets.TAG_VERSION}}
-
-    steps:
-      - name: Checkout repository to Github Workspace
-        uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
 
       - name: Generating .env file
         shell: bash
@@ -86,7 +74,6 @@ jobs:
           echo DBUSER="$DBUSER" >> .env
           echo DBPASS="$DBPASS" >> .env
           echo HOST="localhost" >> .env
-          pwd
           ls -al
           cat .env
 
