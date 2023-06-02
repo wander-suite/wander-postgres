@@ -21,6 +21,7 @@ permissions:
 jobs:
   test:
     runs-on: ubuntu-latest
+    container: ubuntu
     strategy:
       matrix:
         os: [ubuntu-latest]
