@@ -65,7 +65,7 @@ jobs:
     container:
       image: node
       volumes:
-        - ${{ github.workspace }}:${{ github.workspace }}
+        - .:${{ github.workspace }}
     strategy:
       matrix:
         os: [ubuntu-latest]
