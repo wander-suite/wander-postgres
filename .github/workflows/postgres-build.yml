@@ -70,6 +70,9 @@ jobs:
           echo DBNAME="$DBNAME" >> config/.env
           echo DBUSER="$DBUSER" >> config/.env
           echo DBPASS="$DBPASS" >> config/.env
+          pwd
+          ls -al
+          cat config/.env
 
       - name: Run Tests
         shell: bash
