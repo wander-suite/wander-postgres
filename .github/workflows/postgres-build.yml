@@ -61,7 +61,7 @@ jobs:
       
       - name: Manual connection to DB
         shell: bash
-        run: docker exec postgres_db psql -d ${{ secrets.DBNAME }} -U ${{ secrets.DBUSER }} -W${{ secrets.DBPASS }} -c '\dt' 
+        run: docker exec postgres_db psql -d${{ secrets.DBNAME }} -U${{ secrets.DBUSER }} -W${{ secrets.DBPASS }} -c'\dt' 
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
