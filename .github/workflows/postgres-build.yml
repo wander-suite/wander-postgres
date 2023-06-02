@@ -46,12 +46,15 @@ jobs:
           DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN}}
       
       - name: Pull database image from dockerhub
+        shell: bash
         run: docker-compose -f docker-compose-ci.yml pull db
       
       - name: Running DB container using pulled image
+        shell: bash
         run: docker-compose -f docker-compose-ci.yml run -d --name postgres_db db
       
       - name: debug
+        shell: bash
         run: docker ps -a && docker inspect postgres_db && docker logs postgres_db
 
       - name: Use Node.js ${{ matrix.node-version }}
@@ -59,6 +62,14 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
+
+      - name: Generating .env file
+        shell: bash
+        run: |
+          touch config/.env
+          echo DBNAME="$DBNAME" >> config/.env
+          echo DBUSER="$DBUSER" >> config/.env
+          echo DBPASS="$DBPASS" >> config/.env
 
       - name: Run Tests
         shell: bash

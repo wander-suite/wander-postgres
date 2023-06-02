@@ -1,4 +1,5 @@
 import { Pool, type PoolClient } from "pg";
+import "dotenv/config";
 import { PoolConfig } from "../types/PostgresConnection.types";
 import { Params } from "../types/main.types";
 import { SQLStatement } from "sql-template-strings";
