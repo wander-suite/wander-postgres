@@ -24,12 +24,7 @@ jobs:
 
     container: 
       image: node
-    
-    strategy:
-      matrix:
-        os: [ubuntu-latest]
-        node-version: [16.x, 18.x]
-    
+
     services:
       postgres:
         image: wandersuite/db:test
