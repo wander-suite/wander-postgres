@@ -19,7 +19,7 @@ permissions:
   security-events: write
 
 jobs:
-  containers:
+  test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
