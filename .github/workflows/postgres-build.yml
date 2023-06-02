@@ -52,7 +52,7 @@ jobs:
         run: docker-compose -f docker-compose-ci.yml run -d --name postgres_db db
       
       - name: debug
-        run: docker logs postgres_db
+        run: docker inspect postgres_db
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
