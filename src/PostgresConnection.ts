@@ -42,6 +42,7 @@ export default class PostgresConnection<T, U>
       client = await pool.connect();
       return new PostgresConnection(pool);
     } catch (error) {
+      console.log(process.env.HOST)
       console.log(error);
       throw new Error(error?.message);
     } finally {
