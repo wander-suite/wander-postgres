@@ -75,10 +75,6 @@ jobs:
       TAG_VERSION: ${{ secrets.TAG_VERSION}}
 
     steps:
-      - name: "Verify active services"
-        shell: bash
-        run: ss -tulpn
-
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
