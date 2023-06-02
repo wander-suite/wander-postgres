@@ -62,10 +62,7 @@ jobs:
   test:
     needs: containers
     runs-on: ubuntu-latest
-    container:
-      image: node
-      volumes:
-        - ${{ github.workspace }}:${{ github.workspace }}
+    container: node
     strategy:
       matrix:
         os: [ubuntu-latest]
@@ -78,6 +75,9 @@ jobs:
       TAG_VERSION: ${{ secrets.TAG_VERSION}}
 
     steps:
+      - name: Checkout repository to Github Workspace
+        uses: actions/checkout@v3
+
       - name: Generating .env file
         shell: bash
         run: |
@@ -87,7 +87,6 @@ jobs:
           echo DBPASS="$DBPASS" >> .env
           echo HOST="localhost" >> .env
           pwd
-          ls -al ${{ github.workspace }}
           ls -al
           cat .env
 
