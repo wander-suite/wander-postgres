@@ -48,11 +48,11 @@ jobs:
       - name: Pull database image from dockerhub
         run: docker-compose -f docker-compose-ci.yml pull db
       
-      - name: Run DB container using database image
+      - name: Running DB container using pulled image
         run: docker-compose -f docker-compose-ci.yml run -d --name postgres_db db
       
       - name: debug
-        run: docker inspect postgres_db
+        run: docker ps -a && docker inspect postgres_db && docker logs postgres_db
 
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
