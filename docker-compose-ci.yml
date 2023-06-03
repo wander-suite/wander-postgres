@@ -1,0 +1,16 @@
+version: "3.0"
+
+services:
+  db:
+    image: wandersuite/db:test
+    environment:
+      - POSTGRES_DB=${DBNAME}
+      - POSTGRES_PASSWORD=${DBPASS}
+      - POSTGRES_USER=${DBUSER}
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD", "sh -c 'pg_isready -d ${DBNAME}'"]
+      interval: 10s
+      timeout: 10s
+      retries: 5

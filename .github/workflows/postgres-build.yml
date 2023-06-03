@@ -1,6 +1,8 @@
 name: Build Postgres Service
 
 on:
+  workflow_call:
+
   workflow_dispatch:
   pull_request:
     branches:
@@ -17,5 +19,77 @@ permissions:
   security-events: write
 
 jobs:
-  call-service-workflow:
-    uses: wander-suite/wander-devops/.github/workflows/service-workflow.yml@main
+  test:
+    runs-on: ubuntu-latest
+
+    container: 
+      image: node
+
+    services:
+      postgres:
+        image: wandersuite/db:test
+        credentials:
+          username: ${{ secrets.DOCKER_USER }}
+          password: ${{ secrets.DOCKER_TOKEN }}
+        env:
+          POSTGRES_DB: ${{ secrets.DBNAME }}
+          POSTGRES_USER: ${{ secrets.DBUSER }}
+          POSTGRES_PASSWORD: ${{ secrets.DBPASS }}
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
+    env:
+      COMPOSE_FILE: docker-compose-ci.yml
+      DBNAME: ${{ secrets.DBNAME }}
+      DBUSER: ${{ secrets.DBUSER }}
+      DBPASS: ${{ secrets.DBPASS }}
+      TAG_VERSION: ${{ secrets.TAG_VERSION}}
+
+    steps:
+      - name: Checkout repository to Github Workspace
+        uses: actions/checkout@v3
+
+      - name: Generating .env file
+        shell: bash
+        run: |
+          touch .env
+          echo DBNAME="$DBNAME" >> .env
+          echo DBUSER="$DBUSER" >> .env
+          echo DBPASS="$DBPASS" >> .env
+          echo HOST="postgres" >> .env
+          ls -al
+          cat .env
+
+      - name: Run Tests
+        shell: bash
+        run: |
+          npm i
+          npm run ci-test
+        continue-on-error: false
+
+  code-scan:
+    name: CodeQL Analysis
+    needs: test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        language:
+          - javascript
+
+    steps:
+      - name: Checkout repository to Github Workspace
+        uses: actions/checkout@v3
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: ${{ matrix.language }}
+
+      - name: Autobuild
+        uses: github/codeql-action/autobuild@v2
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+        with:
+          category: "/language:${{matrix.language}}"

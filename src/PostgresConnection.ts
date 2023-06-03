@@ -9,7 +9,7 @@ type Query<T, U> = (
   queryGenerator: (params: Params | string) => SQLStatement,
   params: Params | string,
   transform?: (values: T[]) => U
-) => Promise<Result<U>>;
+) => Promise<Result<U | Error>>;
 
 type GetQueryResult = (
   client: PoolClient,
@@ -102,7 +102,11 @@ export default class PostgresConnection<T, U>
       client.release();
     }
 
-    if (queryResult instanceof Error || transform == undefined) {
+    if (queryResult instanceof Error) {
+      throw queryResult;
+    }
+
+    if (transform == undefined) {
       return queryResult;
     }
 

@@ -1,7 +1,9 @@
 {
   "extends": "../tsconfig.json",
+  "references": [{ "name": "wander-postgres", "path": ".." }],
   "compilerOptions": {
-    "types": ["jest"]
+    "types": ["jest"],
+    "noEmit": true
   },
-  "include": ["../src", "**/*"]
+  "include": ["."]
 }

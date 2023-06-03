@@ -1,31 +1,14 @@
 import PostgresConnection from "./PostgresConnection";
 import { queries as psqueries } from "./queries";
-import { Params, PostgresQueriesMap } from "../types/main.types";
+import { PostgresQueriesMap } from "../types/main.types";
+import { UserFilters, UserId, UserParams } from "../types/client.types";
 import { PoolConfig } from "../types/PostgresConnection.types";
 import { filterParams } from "../utils/filterParams";
 
-export interface Filters {
-  [k: string]: Array<number | string | boolean>;
-}
-
-export interface UserParams extends Params {
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-}
-
-export type UserId = {
-  id: number;
-};
-
 export default class PostgresClient<T, U> {
-  connection: PostgresConnection<T, U>;
-  queries: PostgresQueriesMap;
-
   constructor(
-    connection: PostgresConnection<T, U>,
-    queries: PostgresQueriesMap
+    private connection: PostgresConnection<T, U>,
+    private queries: PostgresQueriesMap
   ) {
     this.connection = connection;
     this.queries = queries;
@@ -42,16 +25,20 @@ export default class PostgresClient<T, U> {
     await this.connection.close();
   }
 
-  async fetchUser(params: Params) {
-    const filterString = filterParams(params);
+  async fetchUser(filters: UserFilters) {
+    const filterString = filterParams(filters);
 
     return await this.connection.query(
       this.queries["fetch-user"],
       filterString
     );
   }
-  async createUser(params: UserParams) {
-    return await this.connection.query(this.queries["create-user"], params);
+  async createUser(user: UserParams) {
+    return await this.connection.query(this.queries["create-user"], user);
+  }
+
+  async updateUser(params: Partial<UserParams & { id: number }>) {
+    return await this.connection.query(this.queries["update-user"], params);
   }
 
   async deleteUser(id: UserId) {
