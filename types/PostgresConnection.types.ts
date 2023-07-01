@@ -1,7 +1,7 @@
 import { ConnectionOptions } from "tls";
-import { Queries } from "./main.types";
-import pgTypes = require("pg-types");
-import stream = require("stream");
+import { PostgresQueries } from "./main.types";
+import pgTypes from "pg-types";
+import stream from "stream";
 
 export interface ClientConfig {
   user?: string | undefined;
@@ -32,7 +32,7 @@ export interface PoolConfig extends ClientConfig {
   Promise?: PromiseConstructorLike | undefined;
   allowExitOnIdle?: boolean | undefined;
   maxUses?: number | undefined;
-  queries: Queries;
+  queries: PostgresQueries;
 }
 
 export interface CustomTypesConfig {

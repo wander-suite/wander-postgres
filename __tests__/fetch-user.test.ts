@@ -43,4 +43,12 @@ describe("fetch-user tests", () => {
 
     expect(result[0]).toEqual(expectedResult);
   });
+
+  it("should throw an error if creation of the user is unsuccessful", async () => {
+    try {
+      await client.fetchUser();
+    } catch (err) {
+      expect(err).toBeInstanceOf(Error);
+    }
+  });
 });

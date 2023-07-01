@@ -12,10 +12,11 @@ export interface UserParams extends ParamsObject {
 }
 
 export type UserFilters = {
-  id?: [number, string];
-  firstName?: [string, string];
-  lastName?: [string, string];
-  email?: [string, string];
+  id: [number, string];
+  firstName: [string, string];
+  lastName: [string, string];
+  email: [string, string];
+  dateOfBirth: [string, string];
 };
 
 export type UserId = {

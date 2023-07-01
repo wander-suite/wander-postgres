@@ -98,6 +98,7 @@ export default class PostgresConnection<T, U>
       queryResult = await this.getQueryResult(client, queryGenerator, params);
     } catch (err) {
       console.log(err);
+      throw err;
     } finally {
       client.release();
     }

@@ -32,4 +32,12 @@ describe("delete-user tests", () => {
     const fetchedResult = await client.fetchUser({ id: [id, "="] });
     expect(fetchedResult).toHaveLength(0);
   });
+
+  it("should throw an error if deletion of the user is unsuccessful", async () => {
+    try {
+      await client.deleteUser();
+    } catch (err) {
+      expect(err).toBeInstanceOf(Error);
+    }
+  });
 });

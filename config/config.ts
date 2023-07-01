@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import { PoolConfig } from "../types/PostgresConnection.types";
 import { queries } from "../src/queries";
 
-dotenv.config;
+dotenv.config();
 
 const { DBNAME, DBPASS, DBUSER, ENV, HOST, URI } = process.env;
 
