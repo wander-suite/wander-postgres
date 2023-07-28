@@ -62,7 +62,6 @@ jobs:
           cat .env
 
       - name: Run Tests
-        uses: actions/setup-node@v3
         run: |
           npm i
           npm run ci-test
@@ -70,7 +69,7 @@ jobs:
 
   code-scan:
     name: CodeQL Analysis
-    needs: test
+    needs: build-and-test
     runs-on: ubuntu-latest
     strategy:
       matrix:
