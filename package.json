@@ -69,5 +69,8 @@
       ],
       "@babel/preset-typescript"
     ]
+  },
+  "publishConfig": {
+    "chenjosephine:registry": "https://npm.pkg.github.com"
   }
 }
