@@ -11,33 +11,6 @@ permissions:
   security-events: write
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
-    container:
-      image: node
-
-    services:
-      postgres:
-        image: wandersuite/db:latest
-        credentials:
-          username: ${{ secrets.DOCKER_USER }}
-          password: ${{ secrets.DOCKER_TOKEN }}
-        env:
-          POSTGRES_DB: ${{ secrets.DBNAME }}
-          POSTGRES_USER: ${{ secrets.DBUSER }}
-          POSTGRES_PASSWORD: ${{ secrets.DBPASS }}
-        ports:
-          - 5432:5432
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
-
-    env:
-      COMPOSE_FILE: docker-compose-ci.yml
-      DBNAME: ${{ secrets.DBNAME }}
-      DBUSER: ${{ secrets.DBUSER }}
-      DBPASS: ${{ secrets.DBPASS }}
-      TAG_VERSION: ${{ secrets.TAG_VERSION}}
-
   publish-gpr:
     if: github.event.pull_request.merged == true
     needs: build
