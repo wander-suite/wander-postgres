@@ -2,7 +2,7 @@ import PostgresConnection from "./PostgresConnection";
 import { queries as psqueries } from "./queries";
 import { PostgresQueriesMap } from "../types/main.types";
 import { UserFilters, UserId, UserParams } from "../types/client.types";
-import { PoolConfig } from "../types/PostgresConnection.types";
+import { PoolConfig } from "pg";
 import { filterParams } from "../utils/filterParams";
 
 export default class PostgresClient<T, U> {

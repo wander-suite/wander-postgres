@@ -1,32 +1,10 @@
-import { Pool, type PoolClient } from "pg";
-import { PoolConfig } from "../types/PostgresConnection.types";
+import { Pool, PoolConfig, type PoolClient } from "pg";
 import { Params } from "../types/main.types";
 import { SQLStatement } from "sql-template-strings";
 
 type Result<Data = unknown> = Data | Error;
 
-type Query<T, U> = (
-  queryGenerator: (params: Params | string) => SQLStatement,
-  params: Params | string,
-  transform?: (values: T[]) => U
-) => Promise<Result<U | Error>>;
-
-type GetQueryResult = (
-  client: PoolClient,
-  queryGenerator: (params: Params | string) => SQLStatement,
-  params: Params | string
-) => Promise<Result<any[] | Error>>;
-
-interface IPostgresConnection<T, U> {
-  pool: Pool;
-  query: Query<T, U>;
-  getQueryResult: GetQueryResult;
-  close(): Promise<void>;
-}
-
-export default class PostgresConnection<T, U>
-  implements IPostgresConnection<T, U>
-{
+export default class PostgresConnection<T, U> {
   pool: Pool;
 
   constructor(pool: Pool) {
@@ -46,6 +24,7 @@ export default class PostgresConnection<T, U>
       throw new Error(error?.message);
     } finally {
       if (client) client.release();
+      return null;
     }
   }
 
@@ -55,7 +34,7 @@ export default class PostgresConnection<T, U>
     params: Params | string
   ) {
     const query = queryGenerator(params);
-    let queryResult;
+    let queryResult: any;
     try {
       queryResult = await client.query(query);
       if (!(queryResult instanceof Error)) {
@@ -67,33 +46,13 @@ export default class PostgresConnection<T, U>
     }
   }
 
-  /**
-   * Method overloading. The function signatures are being evaluated from the
-   * bottom up. At the very bottom, there is a super-flexible, super-open method
-   * definition. Building on top of that, we're "clamping" it down to two
-   * possibilities - one that handles what happens when the transform callback
-   * is passed in, and one that handles when one isn't.
-   *
-   * If the transform callback isn't provided, we're guaranteed an array of T
-   * values, but if a transform callback is passed in, it's going of type U,
-   * which could be anything
-   */
-  async query(
-    queryGenerator: (params: Params | string) => SQLStatement,
-    params: Params | string
-  ): Promise<Result<T[]>>;
   async query(
     queryGenerator: (params: Params | string) => SQLStatement,
     params: Params | string,
-    transform: (values: T[]) => U
-  ): Promise<Result<U>>;
-  async query(
-    queryGenerator: (params: Params | string) => SQLStatement,
-    params: Params | string,
-    transform?: (values: T[]) => U
+    transform?: (values: T[] | U) => U
   ): Promise<Result<T[] | U>> {
     const client = await this.pool.connect();
-    let queryResult;
+    let queryResult: T[] | U;
     try {
       queryResult = await this.getQueryResult(client, queryGenerator, params);
     } catch (err) {
