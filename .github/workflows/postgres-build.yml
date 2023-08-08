@@ -69,7 +69,6 @@ jobs:
 
   code-scan:
     name: CodeQL Analysis
-    needs: build-and-test
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -92,21 +91,3 @@ jobs:
         uses: github/codeql-action/analyze@v2
         with:
           category: "/language:${{matrix.language}}"
-
-  publish-gpr:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    permissions:
-      packages: write
-      contents: read
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "16.x"
-          registry-url: "https://npm.pkg.github.com/"
-          scope: "@wander-suite"
-      - run: npm ci
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
