@@ -1,6 +1,5 @@
 import dotenv from "dotenv";
-import { PoolConfig } from "../types/PostgresConnection.types";
-import { queries } from "../src/queries";
+import { PoolConfig } from "pg";
 
 dotenv.config;
 
@@ -16,7 +15,6 @@ const postgresConfig: PoolConfig = {
   max: 2,
   idleTimeoutMillis: 120000,
   connectionTimeoutMillis: 12000,
-  logQueries: false,
 };
 
 const config = {

@@ -14,6 +14,7 @@
     "typeRoots": ["./types"],
     "esModuleInterop": true,
     "outDir": "./dist",
+    "declaration": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true
   },
