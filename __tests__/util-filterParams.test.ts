@@ -1,8 +1,9 @@
+import { UserFilters } from "../types/client.types";
 import { filterParams } from "../utils/filterParams";
 
 describe("filterParams tests", () => {
   it("should create a string with the ", async () => {
-    const localParams = {
+    const localParams: UserFilters = {
       id: [1, "="],
       firstName: ["giuseppe", "="],
       dateOfBirth: ["2023-01-01", ">"],

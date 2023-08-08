@@ -16,6 +16,7 @@ export type UserFilters = {
   firstName?: [string, string];
   lastName?: [string, string];
   email?: [string, string];
+  dateOfBirth?: [string, string];
 };
 
 export type UserId = {
