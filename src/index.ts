@@ -1,5 +1,5 @@
 import PostgresConnection from "./PostgresConnection";
-import PostgresClient from "PostgresClient";
+import PostgresClient from "./PostgresClient";
 
 module.exports = {
   PostgresConnection,
