@@ -16,7 +16,7 @@ const postgresConfig: PoolConfig = {
   max: 2,
   idleTimeoutMillis: 120000,
   connectionTimeoutMillis: 12000,
-  queries,
+  logQueries: false,
 };
 
 const config = {
