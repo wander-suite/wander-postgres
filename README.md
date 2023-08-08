@@ -1,5 +1,7 @@
 # wander-postgres
 
+Library for wander project queries
+
 ## TESTING
 
-Run `npm run test`
+1. Run `npm run test`

@@ -19,10 +19,10 @@ permissions:
   security-events: write
 
 jobs:
-  test:
+  build-and-test:
     runs-on: ubuntu-latest
 
-    container: 
+    container:
       image: node
 
     services:
@@ -62,7 +62,6 @@ jobs:
           cat .env
 
       - name: Run Tests
-        shell: bash
         run: |
           npm i
           npm run ci-test
@@ -70,7 +69,6 @@ jobs:
 
   code-scan:
     name: CodeQL Analysis
-    needs: test
     runs-on: ubuntu-latest
     strategy:
       matrix:
