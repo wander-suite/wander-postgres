@@ -1,4 +1,4 @@
-name: Build Postgres Service
+name: Publish package
 
 on:
   pull_request:
