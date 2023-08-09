@@ -1,5 +1,5 @@
-import PostgresClient from "../src/PostgresClient";
-import PostgresConnection from "../src/PostgresConnection";
+import { PostgresClient } from "../src/PostgresClient";
+import { PostgresConnection } from "../src/PostgresConnection";
 import config from "../config/config";
 import SQL from "sql-template-strings";
 
