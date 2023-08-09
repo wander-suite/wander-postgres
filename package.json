@@ -18,6 +18,10 @@
     "url": "https://github.com/wander-suite/wander-postgres/issues"
   },
   "homepage": "https://github.com/wander-suite/wander-postgres#readme",
+  "files": [
+    "./dist",
+    "package.json"
+  ],
   "dependencies": {
     "@jest/globals": "^29.5.0",
     "@types/lodash": "^4.14.194",
