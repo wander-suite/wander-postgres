@@ -1,6 +1,6 @@
 {
   "name": "@wander-suite/wander-postgres",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "A generalized postgres instance which enables db querying for Wander",
   "main": "src/index.ts",
   "scripts": {

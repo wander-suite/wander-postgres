@@ -2,7 +2,6 @@
   "compilerOptions": {
     "target": "es2020",
     "module": "ES2022",
-    "types": ["node", "jest"],
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
@@ -18,5 +17,5 @@
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true
   },
-  "include": ["src"]
+  "include": ["src/*"]
 }
