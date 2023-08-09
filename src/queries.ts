@@ -1,4 +1,4 @@
-import { UserId, UserParams } from "../types/client.types";
+import { UserId, UserParams } from "./types/client.types";
 import { SQL } from "sql-template-strings";
 
 export const queries = () => {

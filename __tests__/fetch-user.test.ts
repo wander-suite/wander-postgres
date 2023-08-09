@@ -1,4 +1,4 @@
-import PostgresClient from "../src/PostgresClient";
+import { PostgresClient } from "../src/PostgresClient";
 import { TEST_USER } from "../common.data";
 import config from "../config/config";
 

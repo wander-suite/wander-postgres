@@ -1,11 +1,11 @@
-import PostgresConnection from "./PostgresConnection";
+import { PostgresConnection } from "./PostgresConnection";
 import { queries as psqueries } from "./queries";
-import { PostgresQueriesMap } from "../types/main.types";
-import { UserFilters, UserId, UserParams } from "../types/client.types";
-import { PoolConfig, Connection } from "pg";
-import { filterParams } from "../utils/filterParams";
+import { PostgresQueriesMap } from "./types/main.types";
+import { UserFilters, UserId, UserParams } from "./types/client.types";
+import { PoolConfig } from "pg";
+import { filterParams } from "./utils/filterParams";
 
-export default class PostgresClient<T, U> {
+export class PostgresClient<T, U> {
   constructor(
     private connection: PostgresConnection<T, U>,
     private queries: PostgresQueriesMap

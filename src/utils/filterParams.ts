@@ -1,4 +1,5 @@
-import { snakeCase } from "lodash";
+import pkg from "lodash";
+const { snakeCase } = pkg;
 import { UserFilters } from "../types/client.types";
 
 export const filterParams = (params: UserFilters): string => {

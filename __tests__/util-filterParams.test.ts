@@ -1,5 +1,5 @@
-import { UserFilters } from "../types/client.types";
-import { filterParams } from "../utils/filterParams";
+import { UserFilters } from "../src/types/client.types";
+import { filterParams } from "../src/utils/filterParams";
 
 describe("filterParams tests", () => {
   it("should create a string with the ", async () => {
