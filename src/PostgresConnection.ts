@@ -13,7 +13,7 @@ export default class PostgresConnection<T, U> {
 
   static async build<T, U>(
     config: PoolConfig
-  ): Promise<PostgresConnection<T, U>> {
+  ): Promise<PostgresConnection<T, U> | Error | void> {
     let client: PoolClient;
     try {
       const pool = new Pool(config);
@@ -24,7 +24,6 @@ export default class PostgresConnection<T, U> {
       throw new Error(error?.message);
     } finally {
       if (client) client.release();
-      return null;
     }
   }
 
@@ -57,6 +56,7 @@ export default class PostgresConnection<T, U> {
       queryResult = await this.getQueryResult(client, queryGenerator, params);
     } catch (err) {
       console.log(err);
+      throw err;
     } finally {
       client.release();
     }
