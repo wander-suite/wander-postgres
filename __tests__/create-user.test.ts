@@ -28,6 +28,7 @@ describe("create-user tests", () => {
     try {
       await client.createUser();
     } catch (e) {
+      expect(e).toBeDefined();
       expect(e).toBeInstanceOf(TypeError);
     }
   });
