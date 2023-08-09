@@ -1,7 +1,2 @@
-import PostgresConnection from "./PostgresConnection";
-import PostgresClient from "./PostgresClient";
-
-module.exports = {
-  PostgresConnection,
-  PostgresClient,
-};
+export { PostgresConnection } from "./PostgresConnection";
+export { PostgresClient } from "./PostgresClient";

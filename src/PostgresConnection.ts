@@ -1,34 +1,37 @@
-import { Pool, PoolConfig, type PoolClient } from "pg";
-import { Params } from "../types/main.types";
+import pg from "pg";
+import { Params } from "./types/main.types";
 import { SQLStatement } from "sql-template-strings";
 
 type Result<Data = unknown> = Data | Error;
+const { Pool } = pg;
 
-export default class PostgresConnection<T, U> {
-  pool: Pool;
+export class PostgresConnection<T, U> {
+  pool: pg.Pool;
 
-  constructor(pool: Pool) {
+  constructor(pool: pg.Pool) {
     this.pool = pool;
   }
 
   static async build<T, U>(
-    config: PoolConfig
+    config: pg.PoolConfig
   ): Promise<PostgresConnection<T, U> | Error | void> {
-    let client: PoolClient;
+    let client: pg.PoolClient;
     try {
       const pool = new Pool(config);
       client = await pool.connect();
       return new PostgresConnection(pool);
     } catch (error) {
       console.log(error);
-      throw new Error(error?.message);
+      if (error instanceof Error) {
+        throw new Error(error?.message);
+      }
     } finally {
       if (client) client.release();
     }
   }
 
   async getQueryResult(
-    client: PoolClient,
+    client: pg.PoolClient,
     queryGenerator: (params: Params | string) => SQLStatement,
     params: Params | string
   ) {
