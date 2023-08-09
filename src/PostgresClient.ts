@@ -2,7 +2,7 @@ import PostgresConnection from "./PostgresConnection";
 import { queries as psqueries } from "./queries";
 import { PostgresQueriesMap } from "../types/main.types";
 import { UserFilters, UserId, UserParams } from "../types/client.types";
-import { PoolConfig } from "pg";
+import { PoolConfig, Connection } from "pg";
 import { filterParams } from "../utils/filterParams";
 
 export default class PostgresClient<T, U> {
@@ -16,7 +16,10 @@ export default class PostgresClient<T, U> {
 
   static async build(config: PoolConfig) {
     const postgresQueries: PostgresQueriesMap = { ...psqueries() };
-    const connection = await PostgresConnection.build(config);
+
+    const connection = (await PostgresConnection.build(
+      config
+    )) as PostgresConnection<any, any>;
 
     return new PostgresClient(connection, postgresQueries);
   }

@@ -24,8 +24,13 @@ afterAll(async () => {
 });
 
 describe("create-user tests", () => {
-  it.skip("should throw an error if creation of the user is unsuccessful", async () => {
-    expect(await client.createUser()).toThrowError();
+  it("should throw an error if creation of the user is unsuccessful", async () => {
+    try {
+      await client.createUser();
+    } catch (e) {
+      expect(e).toBeDefined();
+      expect(e).toBeInstanceOf(TypeError);
+    }
   });
 
   it("should create a user and return the user along with its id", async () => {
