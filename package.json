@@ -3,6 +3,14 @@
   "version": "1.0.3",
   "description": "A generalized postgres instance which enables db querying for Wander",
   "main": "src/index.ts",
+  "exports": {
+    "./*": "./dist/*"
+  },
+  "typesVersions": {
+    "*": {
+      "*":["dist/*"]
+    }
+  },
   "scripts": {
     "ci-test": "jest --runInBand --verbose",
     "test": "docker-compose up -d && sleep 5 && jest --watch --runInBand --verbose; docker compose down",
