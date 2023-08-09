@@ -1,6 +1,6 @@
 {
   "name": "@wander-suite/wander-postgres",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "A generalized postgres instance which enables db querying for Wander",
   "main": "src/index.ts",
   "scripts": {
@@ -18,10 +18,6 @@
     "url": "https://github.com/wander-suite/wander-postgres/issues"
   },
   "homepage": "https://github.com/wander-suite/wander-postgres#readme",
-  "files": [
-    "./dist",
-    "package.json"
-  ],
   "dependencies": {
     "@jest/globals": "^29.5.0",
     "@types/lodash": "^4.14.194",
