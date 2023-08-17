@@ -16,7 +16,7 @@ export type Query = {
 };
 
 export interface PostgresQueriesMap {
-  [key: string]: (arg: Params | string) => SQLStatement;
+  [key: string]: (arg: any) => SQLStatement;
 }
 
 export interface PostgresQueries {

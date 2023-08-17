@@ -12,16 +12,12 @@ interface CreatedUserResult {
 }
 
 beforeAll(async () => {
-  client = await PostgresClient.build(config.postgresConfig);
+  client = new PostgresClient(config.postgresConfig);
 });
 
 beforeEach(async () => {
   const result = await client.createUser(TEST_USER);
   id = result[0].id;
-});
-
-afterAll(async () => {
-  await client.close();
 });
 
 describe("delete-user tests", () => {

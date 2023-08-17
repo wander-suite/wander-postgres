@@ -1,50 +1,74 @@
-import { PostgresConnection } from "./PostgresConnection";
+import { Pool, PoolConfig, QueryResultRow } from "pg";
 import { queries as psqueries } from "./queries";
 import { PostgresQueriesMap } from "./types/main.types";
-import { UserFilters, UserId, UserParams } from "./types/client.types";
-import { PoolConfig } from "pg";
+import { SQLStatement } from "sql-template-strings";
+import Logger from "./utils/logger";
+import { UserParams, UserId, UserFilters } from "./types/client.types";
 import { filterParams } from "./utils/filterParams";
 
-export class PostgresClient<T, U> {
-  constructor(
-    private connection: PostgresConnection<T, U>,
-    private queries: PostgresQueriesMap
+export class PostgresClient {
+  private pool: Pool;
+  private queries: PostgresQueriesMap;
+
+  constructor(config: PoolConfig) {
+    this.pool = new Pool(config);
+    this.queries = psqueries();
+  }
+
+  async query<T>(text: string, values: any[]): Promise<QueryResultRow> {
+    return this.pool.query(text, values);
+  }
+
+  async getQueryResult(
+    queryGenerator: (params: any) => SQLStatement,
+    params: any,
+    transform?: (values: any) => any
   ) {
-    this.connection = connection;
-    this.queries = queries;
+    const client = await this.pool.connect();
+    const query = queryGenerator(params);
+    let queryResult: any;
+    try {
+      queryResult = await client.query(query);
+      if (!(queryResult instanceof Error)) {
+        return queryResult.rows;
+      }
+    } catch (error) {
+      Logger.error(`Error occurred while querying db: ${error}`);
+      if (error instanceof Error) {
+        throw error;
+      }
+    } finally {
+      if (client) client.release();
+    }
+
+    if (queryResult instanceof Error) {
+      throw queryResult;
+    }
+
+    if (transform == undefined) {
+      return queryResult.rows;
+    }
+
+    return transform(queryResult.rows);
   }
 
-  static async build(config: PoolConfig) {
-    const postgresQueries: PostgresQueriesMap = { ...psqueries() };
-
-    const connection = (await PostgresConnection.build(
-      config
-    )) as PostgresConnection<any, any>;
-
-    return new PostgresClient(connection, postgresQueries);
-  }
-
-  async close() {
-    await this.connection.close();
+  async createUser(user: UserParams) {
+    return await this.getQueryResult(this.queries["create-user"], user);
   }
 
   async fetchUser(filters: UserFilters) {
-    const filterString = filterParams(filters);
-
-    return await this.connection.query(
+    const filteredParams = filterParams(filters);
+    return await this.getQueryResult(
       this.queries["fetch-user"],
-      filterString
+      filteredParams
     );
   }
-  async createUser(user: UserParams) {
-    return await this.connection.query(this.queries["create-user"], user);
-  }
 
-  async updateUser(params: Partial<UserParams & { id: number }>) {
-    return await this.connection.query(this.queries["update-user"], params);
+  async updateUser(params: { id: number } & Partial<UserParams>) {
+    return await this.getQueryResult(this.queries["update-user"], params);
   }
 
   async deleteUser(id: UserId) {
-    return await this.connection.query(this.queries["delete-user"], id);
+    return await this.getQueryResult(this.queries["delete-user"], id);
   }
 }

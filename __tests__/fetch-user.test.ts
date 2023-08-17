@@ -12,15 +12,11 @@ interface CreatedUserResult {
 }
 
 beforeAll(async () => {
-  client = await PostgresClient.build(config.postgresConfig);
+  client = new PostgresClient(config.postgresConfig);
 });
 
 afterEach(async () => {
   await client.deleteUser(id);
-});
-
-afterAll(async () => {
-  await client.close();
 });
 
 describe("fetch-user tests", () => {
